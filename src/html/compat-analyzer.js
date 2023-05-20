@@ -1,5 +1,5 @@
 const htmlParser = require("htmlparser2");
-const bcd = require("mdn-browser-compat-data");
+const bcd = require("@mdn/browser-compat-data");
 const fs = require("fs");
 const semver = require("semver");
 const readline = require("readline");
@@ -24,6 +24,11 @@ exports.analyzeFile = function analyzeFile (fileName, browserScope, callback, op
         crlfDelay: Infinity
     });
     let numLine = 1;
+    // console.log("hello");
+    // console.log(browserScope);
+    // console.log(fileName);
+    // console.log(numLine);
+
 
     const parser = initParser(browserScope, fileName, numLine, report, callback, options);
 
@@ -41,9 +46,15 @@ exports.analyzeFile = function analyzeFile (fileName, browserScope, callback, op
 function initParser (browserScope, fileName, numLine, report, callback, options = {"contrib":null}){
     return new htmlParser.Parser({
         onopentag: function (name, attribs){
+            console.log("name:" + name + "attr:" + attribs)
             if(bcd.html.elements[name]){
                 Object.keys(browserScope).map((browser)=>{
                     let versionAddedElem;
+                    // console.log("browser")
+                    // console.log(browser)
+
+                    // console.log(bcd.html.elements[name].__compat)
+                    // console.log(bcd.html.elements[name].__compat.support[browser])
                     if(bcd.html.elements[name].__compat.support[browser]){
                         versionAddedElem = bcd.html.elements[name].__compat.support[browser].version_added;
                     }
